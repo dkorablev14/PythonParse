@@ -6,9 +6,8 @@ import re
 FILENAME = "hogwarts.csv"
 columns = ["name", "mail", "gender", "real_name", "is_author"]
 for i in range(1, 471000):
-    print(i)
     user = {}
-    user_id = i
+
     url = 'https://hogwartsnet.ru/mfanf/member.php?id=' + str(i)
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
@@ -36,6 +35,8 @@ for i in range(1, 471000):
         user['is_author'] = True
     else:
         user['is_author'] = False
+    print(i)
+    user['id'] = i
     with open(FILENAME, "a", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=columns)
         if i == 1:
