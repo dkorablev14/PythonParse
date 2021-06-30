@@ -3,11 +3,11 @@ from bs4 import BeautifulSoup
 import csv
 import re
 
-FILENAME = "hogwarts.csv"
+FILENAME = "fanfics.csv"
 columns = ["name", "mail", "gender", "real_name", "is_author"]
-for i in range(1, 471000):
+for i in range(1, 720000):
     user = {}
-    url = 'https://hogwartsnet.ru/mfanf/member.php?id=' + str(i)
+    url = 'https://fanfics.me/user' + str(i)
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
     check_isset = soup.find('tr', {'class': 'wb top_fanf'}).text.strip()
