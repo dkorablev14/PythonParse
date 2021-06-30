@@ -6,11 +6,15 @@ import re
 FILENAME = "hogwarts.csv"
 columns = ["name", "mail", "gender", "real_name", "is_author"]
 for i in range(1, 471000):
+    print(i)
     user = {}
     user_id = i
     url = 'https://hogwartsnet.ru/mfanf/member.php?id=' + str(i)
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
+    check_isset = soup.find('tr', {'class': 'wb top_fanf'}).text.strip()
+    if check_isset == 'Запрашиваемый Вами автор не найден':
+        continue
     centered = soup.find('div', {'class': 'CenteredContent'})
     tables = centered.find_all('table')
     user['name'] = tables[0].find('h2').text.strip()
@@ -24,10 +28,10 @@ for i in range(1, 471000):
             user['gender'] = value
         elif name == 'Настоящее имя':
             user['real_name'] = value
-    if user['mail'] == 'NULL':
+    if re.search('@', user['mail']) is None:
         continue
     check_author = tables[2].find('h1').text.strip()
-    check_author_reg = re.match('У автора ' + user['name'] + ' (\\d+)', check_author).group(1)
+    check_author_reg = re.search('У автора\\s+' + re.escape(user['name']) + '\\s+(\\d+)', check_author).group(1)
     if int(check_author_reg) != 0:
         user['is_author'] = True
     else:
