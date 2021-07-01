@@ -4,18 +4,18 @@ import csv
 import re
 
 FILENAME = "hogwarts.csv"
-columns = ["name", "mail", "gender", "real_name", "is_author"]
-for i in range(1, 471000):
+columns = ["id", "mail", "gender", "real_name", "is_author"]
+for i in range(17631, 471000):
     user = {}
     url = 'https://hogwartsnet.ru/mfanf/member.php?id=' + str(i)
     r = requests.get(url)
-    soup = BeautifulSoup(r.text, 'html.parser')
+    soup = BeautifulSoup(r.text, 'lxml')
     check_isset = soup.find('tr', {'class': 'wb top_fanf'}).text.strip()
     if check_isset == 'Запрашиваемый Вами автор не найден':
         continue
     centered = soup.find('div', {'class': 'CenteredContent'})
     tables = centered.find_all('table')
-    user['name'] = tables[0].find('h2').text.strip()
+    nickname = tables[0].find('h2').text.strip()
     data = tables[1].find_all('tr')
     for tr in data:
         name = tr.find_all('td')[0].text.strip()
@@ -29,7 +29,7 @@ for i in range(1, 471000):
     if re.search('@', user['mail']) is None:
         continue
     check_author = tables[2].find('h1').text.strip()
-    check_author_reg = re.search('У автора\\s+' + re.escape(user['name']) + '\\s+(\\d+)', check_author).group(1)
+    check_author_reg = re.search('У автора\\s+' + re.escape(nickname) + '\\s+(\\d+)', check_author).group(1)
     if int(check_author_reg) != 0:
         user['is_author'] = True
     else:
