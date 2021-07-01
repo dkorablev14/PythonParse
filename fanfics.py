@@ -9,7 +9,7 @@ for i in range(1, 720000):
     user = {}
     url = 'https://fanfics.me/user' + str(i)
     r = requests.get(url)
-    soup = BeautifulSoup(r.text, 'html.parser')
+    soup = BeautifulSoup(r.text, 'lxml')
     check_isset = soup.find('tr', {'class': 'wb top_fanf'}).text.strip()
     if check_isset == 'Запрашиваемый Вами автор не найден':
         continue
