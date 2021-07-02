@@ -5,7 +5,7 @@ import re
 
 FILENAME = "hogwarts.csv"
 columns = ["id", "mail", "gender", "real_name", "is_author"]
-for i in range(213197, 471000):
+for i in range(228465, 471000):
     user = {}
     url = 'https://hogwartsnet.ru/mfanf/member.php?id=' + str(i)
     r = requests.get(url)
