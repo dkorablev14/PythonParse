@@ -5,7 +5,7 @@ import re
 
 FILENAME = "hogwarts.csv"
 columns = ["id", "mail", "gender", "real_name", "is_author"]
-for i in range(228465, 471000):
+for i in range(470273, 471000):
     user = {}
     url = 'https://hogwartsnet.ru/mfanf/member.php?id=' + str(i)
     r = requests.get(url)
@@ -35,7 +35,7 @@ for i in range(228465, 471000):
     else:
         user['is_author'] = False
     user['id'] = i
-    with open(FILENAME, "a", newline="") as file:
+    with open(FILENAME, "a", newline="",encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=columns)
         if i == 1:
             writer.writeheader()
