@@ -5,7 +5,7 @@ import re
 
 FILENAME = "fanfics.csv"
 columns = ["id", "mail", "gender", "real_name", "is_author", "links"]
-for i in range(1, 720000):
+for i in range(123993, 720000):
     user = {}
     url = 'https://fanfics.me/user' + str(i)
     r = requests.get(url)
@@ -13,6 +13,8 @@ for i in range(1, 720000):
         continue
     soup = BeautifulSoup(r.text, 'lxml')
     profileMain = soup.find('table', {'class': 'ProfileInfo_main'})
+    if profileMain is None:
+        continue
     trs = profileMain.find_all('tr')
     for tr in trs:
         tds = tr.find_all('td')
@@ -45,17 +47,22 @@ for i in range(1, 720000):
                         user['links'].append(link[2])
     if user['mail'] == '' or re.search('@', user['mail']) is None:
         continue
+    # if len(user['links']) > 0:
+    user['links'] = ','.join(user['links'])
     check_author = soup.find('div', {'class': 'fics_in_profile_container'})
-    check_author = check_author.find('div', {'class': 'ProfileLeft_h2_descr'}).text.strip()
-    check_author_reg = re.search('\\d+', check_author).group(0)
+    if check_author is None:
+        check_author_reg = 0
+    else:
+        check_author = check_author.find('div', {'class': 'ProfileLeft_h2_descr'}).text.strip()
+        check_author_reg = re.search('\\d+', check_author).group(0)
     if int(check_author_reg) != 0:
         user['is_author'] = True
     else:
         user['is_author'] = False
     print(i)
     user['id'] = i
-    # with open(FILENAME, "a", newline="") as file:
-    #     writer = csv.DictWriter(file, fieldnames=columns)
-    #     if i == 1:
-    #         writer.writeheader()
-    #     writer.writerow(user)
+    with open(FILENAME, "a", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=columns)
+        if i == 2:
+            writer.writeheader()
+        writer.writerow(user)
