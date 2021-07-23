@@ -8,14 +8,14 @@ import time
 
 
 def main():
-    # text()
-    disk()
+    text()
+    # disk()
 
 
 def text():
-    for i in range(337, 338):
+    for i in range(1, 486):
         print(i)
-        url = 'https://fanfic.ucoz.com/load/?page' + str(i)
+        url = 'http://fanfics.info/load/?page' + str(i)
         r = requests.get(url)
         # time.sleep(5)
         if r.status_code == 404:
@@ -23,8 +23,8 @@ def text():
         soup = BeautifulSoup(r.text, 'lxml')
         entries = soup.find_all("div", id=re.compile('entryID\\d+'))
         for entry in entries:
-            title = entry.find('div', {'class': 'eTitle'})
-            url_card = title.find('a')
+            title = entry.find_all('table')
+            url_card = title[1].find('a')
             url_card = 'https://fanfic.ucoz.com' + url_card.get('href')
             file = url_card.split('load/')
             FILENAME = 'C:/Users/Denis/PycharmProjects/FunFuck2/htmls/' + file[1] + ".html"
