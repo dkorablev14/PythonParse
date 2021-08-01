@@ -20,7 +20,6 @@ def text():
         cookies = {
             'Cookie': 'onagini-snakeuzll=1626865286; ucvid=4HYBr148X9; _ym_uid=1626865283300121177; _ym_d=1626865283; _cc_session=2cd807a9-7d3a-4ea0-946f-79ac05eacf0c; sspUid=beca3287-2049-4439-ad60-a74f7a8ae463; dmpUid=ywmQT7kj94GqhafPSTXK; _ym_isad=2; onagini-snakedoubt=1; _cc_visit=1; _ym_visorc=b; _cc__visit_deep=12',
         }
-
         url = 'http://nagini-snake.narod.ru/index/fanfiki_2006/0-28'
         r = requests.get(url, cookies=cookies)
         if r.status_code == 404:
@@ -43,22 +42,20 @@ def text():
             hrefs_no = content.find_all('a')
             hrefs_yes = []
             for href in hrefs_no:
-                if re.search('\/index\/', href):
-                    hrefs_yes.append(href)
+                if re.search('\\/index\\/', href.get('href')) is not None:
+                    hrefs_yes.append(href.get('href'))
             for href in hrefs_yes:
-                r_card = requests.get(url_card, cookies=cookies)
+                r_card = requests.get(href, cookies=cookies)
+                if r_card.status_code == 404:
+                    continue
                 soup_card = BeautifulSoup(r_card.text, 'lxml')
                 content = soup_card.find_all('td', {'valign': 'top'})[1]
-            file = url_card.split('load/')
-            file = file[1].split('/')
-            FILENAME = '/home/aleks/PycharmProjects/funfuck/htmls/' + file[-1] + ".html"
-            r_card = requests.get(url_card)
-            # time.sleep(2)
-            if r_card.status_code == 404:
-                continue
-
-            with open(FILENAME, "w", encoding='utf-8') as file:
-                file.write(str(content))
+                file = href.split('index/')
+                file = file[1].split('/')
+                FILENAME = 'C:/Users/Denis/PycharmProjects/FunFuck2/htmls/' + file[-1] + ".html"
+                # time.sleep(2)
+                with open(FILENAME, "w", encoding='utf-8') as file:
+                    file.write(str(content))
     # disk()
 
 
